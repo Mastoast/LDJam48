@@ -91,14 +91,18 @@ function object.check_solid(self, ox, oy)
     ox = ox or 0
     oy = oy or 0
 
-    -- map collisions
-    for i = flr((ox + self.x + self.hit_x) / 8),flr((ox + self.x + self.hit_x + self.hit_w - 1) / 8) do
-		for j = flr((oy + self.y + self.hit_y)/8),flr((oy + self.y + self.hit_y + self.hit_h - 1)/8) do
-			if fget(mget(i, j), 0) then
-				return true
-			end
-		end
-	end
+    local pattern_nb = flr(self.y /128) + 1
+    if pattern_nb >= 1 and pattern_nb <= #patterns then
+        local pattern_x, pattern_y = get_pattern(patterns[pattern_nb])
+        -- map pattern collision
+        for i = flr((ox + self.x + self.hit_x + pattern_x * 8) / 8),flr((ox + self.x + self.hit_x + pattern_x * 8 + self.hit_w - 1) / 8) do
+            for j = flr((oy + self.y%128 + pattern_y * 8 + self.hit_y)/8),flr((oy + self.y%128 + pattern_y * 8 + self.hit_y + self.hit_h - 1)/8) do
+                if fget(mget(i, j), 0) then
+                    return true
+                end
+            end
+        end
+    end
 
     -- object collisions
     if not self.ghost then

@@ -35,7 +35,7 @@ function _update()
 end
 
 function _draw()
-    cls(12)
+    cls((gcamera.y > 80 and 4) or 12)
     
     -- camera
     if shake > 0 then
@@ -44,11 +44,13 @@ function _draw()
         camera(gcamera.x, gcamera.y)
     end
 
-
+    -- print every visible pattern
     if patterns and #patterns > 0 then
         for i=1,#patterns do
-            local pattern_x, pattern_y = get_pattern(patterns[i])
-            map(pattern_x, pattern_y, 0, 8 * 16 * (i - 1), 16,16)
+            if gcamera.y > 128 * (i - 2) and gcamera.y < 128 * (i) then
+                local pattern_x, pattern_y = get_pattern(patterns[i])
+                map(pattern_x, pattern_y, 0, 8 * 16 * (i - 1), 16,16)
+            end
         end
     end
 
