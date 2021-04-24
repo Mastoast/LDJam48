@@ -3,12 +3,18 @@ function _init()
     gtime = 0
     shake = 0
     infade = 0
+    create(worm, 14, 14)
+    create(mole, 50, 50)
 end
 
-function _update60()
+function _update()
     -- timers
     gtime += 1
     shake = max(shake - 1)
+
+    for o in all(objects) do
+        o:update()
+    end
 end
 
 function _draw()
@@ -22,6 +28,10 @@ function _draw()
     end
 
     map()
+
+    for o in all(objects) do
+        o:draw()
+    end
 
     print(printable, 80, 120, 6)
 end

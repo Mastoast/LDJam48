@@ -3,6 +3,7 @@ mole.hit_w = 8
 mole.hit_h = 8
 mole.speed = 5
 mole.state = 1
+mole.facing = 2
 
 -- TODO add particules on win / death / movement
 -- TODO SFXs
@@ -16,6 +17,15 @@ end
 -- 3 : waiting
 
 function mole.update(self)
+
+    --
+    if self.state == 1 then
+        self.spr = 17
+        self.flip_y = true
+    else
+        self.spr = 16
+        self.slip_y = false
+    end
 
     -- get inputs
 
@@ -34,7 +44,7 @@ function mole.update(self)
 end
 
 function mole.draw(self)
-    spr(self.spr)
+    spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
 end
 
 function mole.hit(self)
