@@ -29,7 +29,7 @@ function mole.update(self)
     -- timers
     if self.recovery > 0 then
         self.recovery -= 1
-        if self.recovery == 0 then self.state = 1 end
+        if self.recovery == 0 and self.state == 2 then self.state = 1 end
     end
     
     -- get inputs
@@ -47,6 +47,8 @@ function mole.update(self)
         self.speed_x += input_x * self.accel_x
     end
 
+    -- gravity
+    if self.y < 80 - self.hit_h then input_y = 1 end
     if input_y == 0 then
         self.speed_y *= 0.9
         if abs(self.speed_y) < 1 then self.speed_y = 0 end
@@ -77,6 +79,9 @@ function mole.update(self)
         end
     end
 
+    -- prevent cliping
+    if self:check_solid(sgn(self.speed_x), 0) then self.speed_x = 0 end
+    if self:check_solid(0, sgn(self.speed_y)) then self.speed_y = 0 end
 end
 
 function ply_input(self)
@@ -127,7 +132,7 @@ function mole.collide_x(self)
 end
 
 function mole.collide_y(self)
-    if abs(self.speed_y) > 2 then
+    if abs(self.speed_y) > 3 then
         if self.is_player then
             freeze_time = 5
             shake = 5
