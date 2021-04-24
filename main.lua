@@ -3,8 +3,9 @@ function _init()
     gtime = 0
     shake = 0
     infade = 0
+    gcamera = {x = 0, y = 0}
     create(worm, 14, 14)
-    create(mole, 50, 50)
+    current_player = create(mole, 50, 50)
 end
 
 function _update()
@@ -15,6 +16,9 @@ function _update()
     for o in all(objects) do
         o:update()
     end
+
+    -- TODO fluid camera
+    gcamera.y = current_player.y - 32
 end
 
 function _draw()
@@ -22,12 +26,12 @@ function _draw()
     
     -- camera
     if shake > 0 then
-        camera(0 - 2 + rnd(5), 0 - 2 + rnd(5))
+        camera(gcamera.x - 2 + rnd(5), gcamera.y - 2 + rnd(5))
     else
-        camera(0, 0)
+        camera(gcamera.x, gcamera.y)
     end
 
-    map()
+    map(0, 0, 0, 0, 16, 64)
 
     for o in all(objects) do
         o:draw()

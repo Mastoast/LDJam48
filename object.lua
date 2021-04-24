@@ -112,9 +112,7 @@ function object.check_solid(self, ox, oy)
     -- border collisions
     return
         self.x + ox < 0 or
-        self.x + ox > 127 - self.hit_w or
-        self.y + oy > 127 - self.hit_h or
-        self.y + oy < 0
+        self.x + ox > 127 - self.hit_w
 
 end
 

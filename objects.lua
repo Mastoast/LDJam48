@@ -3,7 +3,7 @@
 worm = new_type(32)
 worm.anim_time = 7
 worm.sprs = {32, 33}
-worm.speed = 1
+worm.speed_x = 1
 
 function worm.update(self)
     -- anim
@@ -12,7 +12,7 @@ function worm.update(self)
     end
 
     -- movement
-    self:move_x(self.facing * self.speed, reverse_facing)
+    self:move_x(self.facing * self.speed_x, reverse_facing)
 
     self.flip_x = self.facing == -1
 end
