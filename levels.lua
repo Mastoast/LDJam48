@@ -1,7 +1,7 @@
 function init_race()
     gtime = 0
     shake = 0
-    gcamera = {x = 0, y = 0, speed = 2}
+    gcamera = {x = 0, y = 0, facing = 3, speed_y = 2}
     --
     current_player = create(mole, 40, 72)
     current_player.get_input = ply_input

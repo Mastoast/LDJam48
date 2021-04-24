@@ -4,7 +4,7 @@ function _init()
     shake = 0
     infade = 0
     printable = 0
-    gcamera = {x = 0, y = 0, speed = 2}
+    gcamera = {x = 0, y = 0, facing = 3, speed_y = 2}
     init_race()
 end
 
@@ -23,15 +23,16 @@ function _update()
 	end
 
     -- TODO better camera
-    local dest = current_player.y - 16
+    local dest = (current_player.y - 64 + current_player.hit_h) + (current_player.facing == 3 and 48 or -48)
     local diff = dest - gcamera.y
-    if abs(diff) > gcamera.speed then
-        gcamera.y = gcamera.y + sgn(diff) * gcamera.speed
+    if abs(diff) > gcamera.speed_y then
+        gcamera.speed_y += sgn(diff)
+        gcamera.y = gcamera.y + gcamera.speed_y
     else
         gcamera.y = dest
     end
     -- clamp
-    gcamera.y = max(dest - 32, min(dest + 32, gcamera.y))
+    gcamera.y = max(current_player.y - 88, min(current_player.y - 24, gcamera.y))
 end
 
 function _draw()

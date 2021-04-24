@@ -58,14 +58,15 @@ function mole.update(self)
         else
             self.speed_y += self.accel_y * sgn(input_y)
         end
+        self.facing = self.speed_y > 0 and 3 or 2
     end
     
     -- move
     self:move_x(self.speed_x, self.collide_x)
     self:move_y(self.speed_y, self.collide_y)
 
-    if abs(self.speed_y) > 2 then
-        spawn_particles(1, 2, self.x + self.hit_w/2, self.y + self.hit_h/2, 1)
+    if abs(self.speed_y) > 3 or abs(self.speed_x) > 3 and gtime%3 == 0 then
+        spawn_particles(1, 2, self.x + self.hit_w/2, self.y + self.hit_h/2, 5)
     end
 
     -- collisions
@@ -132,7 +133,7 @@ function mole.collide_x(self)
 end
 
 function mole.collide_y(self)
-    if abs(self.speed_y) > 3 then
+    if abs(self.speed_y) > 4 then
         if self.is_player then
             freeze_time = 5
             shake = 5
