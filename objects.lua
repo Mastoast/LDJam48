@@ -1,5 +1,7 @@
--- accelerators / slowers
+-- constants
+trail_colors = {15,13,4}
 
+-- items
 worm = new_type(48)
 worm.anim_time = 7
 worm.sprs = {48, 49}
@@ -32,8 +34,17 @@ particles = {}
 -- color
 function spawn_particles(nb,s,x,y,c)
 	for i=1,flr(nb) do
-		add(particles, make_particle(s,x,y,c))
+        add(particles, make_particle(s,x,y,c))
 	end
+end
+
+function spawn_trail(x,y)
+    
+    local offset = 0
+    for i=1,2 do
+        add(particles, make_trail(1, x + offset,y, trail_colors[0]))
+        offset += 1
+    end
 end
 
 function make_particle(s,x,y,c)
@@ -48,6 +59,25 @@ function make_particle(s,x,y,c)
 		draw=draw_particle
 	}
 	return p
+end
+
+function make_trail(s,x,y,c)
+    local t = {
+        s = s or 1,
+        c = c or 0,
+        x=x,y=y,
+        t=0, t_max=15+flr(rnd(8)),
+        update=update_trail,
+        draw=draw_particle
+    }
+    return t
+end
+
+function update_trail(a)
+    a.c = trail_colors[flr((a.t/a.t_max) * #trail_colors) + 1]
+    printable = a.c
+    a.t+=1
+	if (a.t==a.t_max) del(particles, a)
 end
 
 function draw_particle(a)

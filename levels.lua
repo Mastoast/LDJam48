@@ -11,6 +11,10 @@ function init_race()
     -- create(mole, 112, 72)
     race_length = 4
     patterns = {0, 4, 5, 6, 1}
+    -- spawn a worm every pattern
+    for i=1,#patterns - 1 do
+        create(worm, flr(rnd(120)), i * 128 + flr(rnd(120)))
+    end
 end
 
 function get_pattern(n)

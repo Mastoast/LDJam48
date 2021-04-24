@@ -65,10 +65,11 @@ function mole.update(self)
     self:move_x(self.speed_x, self.collide_x)
     self:move_y(self.speed_y, self.collide_y)
 
-    if abs(self.speed_y) > 3 or abs(self.speed_x) > 3 and gtime%3 == 0 then
-        spawn_particles(1, 2, self.x + self.hit_w/2, self.y + self.hit_h/2, 5)
-    end
 
+    -- trail
+    if (abs(self.speed_y) > 1 or abs(self.speed_x) > 1) and self.y > 80 then
+        spawn_trail(self.x + self.hit_w/2, self.y + self.hit_h/2)
+    end
     -- collisions
     if self.state == 1 then
         for o in all(objects) do
