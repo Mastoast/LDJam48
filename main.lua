@@ -3,6 +3,8 @@ function _init()
     gtime = 0
     shake = 0
     infade = 0
+    printable = 0
+    particles = {}
     gcamera = {x = 0, y = 0}
     create(worm, 14, 14)
     current_player = create(mole, 50, 50)
@@ -15,6 +17,7 @@ function _update()
 
     for o in all(objects) do
         o:update()
+        if o.destroyed then del(objects, o) end
     end
 
     -- TODO fluid camera
@@ -37,7 +40,7 @@ function _draw()
         o:draw()
     end
 
-    print(printable, 80, 120, 6)
+    print(printable, gcamera.x + 80, gcamera.y + 120, 6)
 end
 
 -- linear interpolation

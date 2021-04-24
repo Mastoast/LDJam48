@@ -7,6 +7,7 @@ mole.accel_y = 0.2
 mole.decel_y = 0.9
 mole.accel_x = 0.2
 mole.decel_x = 0.9
+mole.recovery = 0
 
 -- TODO add particules on win / death / movement
 -- TODO SFXs
@@ -21,10 +22,24 @@ end
 
 function mole.update(self)
 
+    -- timers
+    if self.recovery > 0 then
+        self.recovery -= 1
+        if self.recovery == 0 then self.state = 1 end
+    end
+    
+    printable = self.recovery
     -- get inputs
     local input_x = 0
-    if btn(0) then input_x -= 1 end
-    if btn(1) then input_x += 1 end
+    local input_y = 0
+    
+    if self.state == 1 then
+        if btn(0) then input_x -= 1 end
+        if btn(1) then input_x += 1 end
+        if btn(2) then input_y -= 1 end
+        if btn(3) then input_y += 1 end
+    end
+    
     if input_x == 0 then
         self.speed_x *= 0.9
         if abs(self.speed_x) < 1 then self.speed_x = 0 end
@@ -32,9 +47,6 @@ function mole.update(self)
         self.speed_x += input_x * self.accel_x
     end
 
-    local input_y = 0
-    if btn(2) then input_y -= 1 end
-    if btn(3) then input_y += 1 end
     if input_y == 0 then
         self.speed_y *= 0.9
         if abs(self.speed_y) < 1 then self.speed_y = 0 end
@@ -54,38 +66,58 @@ function mole.update(self)
     if self.state == 1 then
         for o in all(objects) do
             if o.base == worm and self:overlaps(o) then
-                -- eat worm
+                o.destroyed = true
+                self.speed_y += 1
+                -- TODO part
             end
         end
     end
 
-    -- 
+end
+
+function mole.draw(self)
     if self.state == 1 then
-        self.spr = 17
-        self.flip_y = true
+        if abs(self.speed_y) >= abs(self.speed_x) then
+            self.spr = 17
+            self.flip_y = self.speed_y >= 0
+        else
+            self.spr = 18
+            self.flip_x = self.speed_x < 0
+        end
     else
         self.spr = 16
         self.slip_y = false
     end
-end
 
-function mole.draw(self)
     spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
+    pset(self.x + 2, self.y - 1 + (self.flip_y and 0 or 9), 3)
+    pset(self.x + 5, self.y - 1 + (self.flip_y and 0 or 9), 3)
 end
 
 function mole.collide_x(self)
-    shake = 1
-    self.speed_x = - self.speed_x/2
+    if abs(self.speed_x) > 2 then
+        shake = 1
+        self.speed_x = - self.speed_x/2
+        self:hit(5)
+    else
+        self.speed_x = 0
+    end
     -- sfx
 end
 
 function mole.collide_y(self)
-    if self.speed_y > 2 then
+    if abs(self.speed_y) > 2 then
         freeze_time = 5
         shake = 5
         self.speed_y = - self.speed_y/2
+        self:hit(10)
     else
-        self.speed_y = - sgn(self.speed_y)
+        self.speed_y = 0
     end
     -- sfx
+end
+
+function mole.hit(self, recovery)
+    self.recovery = recovery
+    self.state = 2
 end

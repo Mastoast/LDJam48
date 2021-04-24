@@ -1,9 +1,10 @@
 -- accelerators / slowers
 
-worm = new_type(32)
+worm = new_type(48)
 worm.anim_time = 7
-worm.sprs = {32, 33}
+worm.sprs = {48, 49}
 worm.speed_x = 1
+worm.solid = false
 
 function worm.update(self)
     -- anim
