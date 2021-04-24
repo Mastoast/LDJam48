@@ -15,7 +15,7 @@ function _init()
     current_player.get_input = ply_input
     current_player.is_player = true
     create(mole, 110, 50)
-    create(mole, 30, 50)
+    create(mole, 60, 50)
 end
 
 function _update()
@@ -47,6 +47,7 @@ function _draw()
     end
 
     map(0, 0, 0, 0, 16, 64)
+    --map(16, 0, 0, 0, 16, 16)
 
     for o in all(objects) do
         o:draw()

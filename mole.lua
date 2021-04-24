@@ -14,6 +14,9 @@ mole.is_player = false
 -- TODO SFXs
 function mole.init(self)
     self.get_input = cpu_input
+    self.speed_y = -10
+    self.state = 2
+    self.recovery = 30
 end
 
 -- States
