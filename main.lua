@@ -4,18 +4,8 @@ function _init()
     shake = 0
     infade = 0
     printable = 0
-    gcamera = {x = 0, y = 0}
-    create(worm, 14, 14)
-    create(worm, 64, 150)
-    create(worm, 64, 200)
-    create(worm, 64, 250)
-    create(worm, 64, 300)
-    create(worm, 64, 350)
-    current_player = create(mole, 50, 50)
-    current_player.get_input = ply_input
-    current_player.is_player = true
-    create(mole, 110, 50)
-    create(mole, 60, 50)
+    gcamera = {x = 0, y = 0, speed = 2}
+    init_race()
 end
 
 function _update()
@@ -32,8 +22,16 @@ function _update()
 		a:update()
 	end
 
-    -- TODO fluid camera
-    gcamera.y = current_player.y - 32
+    -- TODO better camera
+    local dest = current_player.y - 16
+    local diff = dest - gcamera.y
+    if abs(diff) > gcamera.speed then
+        gcamera.y = gcamera.y + sgn(diff) * gcamera.speed
+    else
+        gcamera.y = dest
+    end
+    -- clamp
+    gcamera.y = max(dest - 32, min(dest + 32, gcamera.y))
 end
 
 function _draw()
@@ -46,8 +44,13 @@ function _draw()
         camera(gcamera.x, gcamera.y)
     end
 
-    map(0, 0, 0, 0, 16, 64)
-    --map(16, 0, 0, 0, 16, 16)
+
+    if patterns and #patterns > 0 then
+        for i=1,#patterns do
+            local pattern_x, pattern_y = get_pattern(patterns[i])
+            map(pattern_x, pattern_y, 0, 8 * 16 * (i - 1), 16,16)
+        end
+    end
 
     for o in all(objects) do
         o:draw()

@@ -32,7 +32,6 @@ function mole.update(self)
         if self.recovery == 0 then self.state = 1 end
     end
     
-    printable = self.recovery
     -- get inputs
     local input_x = 0
     local input_y = 0
