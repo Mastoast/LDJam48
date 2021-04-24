@@ -4,10 +4,18 @@ function _init()
     shake = 0
     infade = 0
     printable = 0
-    particles = {}
     gcamera = {x = 0, y = 0}
     create(worm, 14, 14)
+    create(worm, 64, 150)
+    create(worm, 64, 200)
+    create(worm, 64, 250)
+    create(worm, 64, 300)
+    create(worm, 64, 350)
     current_player = create(mole, 50, 50)
+    current_player.get_input = ply_input
+    current_player.is_player = true
+    create(mole, 110, 50)
+    create(mole, 30, 50)
 end
 
 function _update()
@@ -19,6 +27,10 @@ function _update()
         o:update()
         if o.destroyed then del(objects, o) end
     end
+
+    for a in all(particles) do
+		a:update()
+	end
 
     -- TODO fluid camera
     gcamera.y = current_player.y - 32
@@ -39,6 +51,10 @@ function _draw()
     for o in all(objects) do
         o:draw()
     end
+
+    for a in all(particles) do
+		a:draw()
+	end
 
     print(printable, gcamera.x + 80, gcamera.y + 120, 6)
 end

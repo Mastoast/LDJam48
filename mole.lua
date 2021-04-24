@@ -8,11 +8,12 @@ mole.decel_y = 0.9
 mole.accel_x = 0.2
 mole.decel_x = 0.9
 mole.recovery = 0
+mole.is_player = false
 
 -- TODO add particules on win / death / movement
 -- TODO SFXs
 function mole.init(self)
-
+    self.get_input = cpu_input
 end
 
 -- States
@@ -34,10 +35,7 @@ function mole.update(self)
     local input_y = 0
     
     if self.state == 1 then
-        if btn(0) then input_x -= 1 end
-        if btn(1) then input_x += 1 end
-        if btn(2) then input_y -= 1 end
-        if btn(3) then input_y += 1 end
+        input_x, input_y = self:get_input()
     end
     
     if input_x == 0 then
@@ -62,17 +60,38 @@ function mole.update(self)
     self:move_x(self.speed_x, self.collide_x)
     self:move_y(self.speed_y, self.collide_y)
 
+    if abs(self.speed_y) > 2 then
+        spawn_particles(1, 2, self.x + self.hit_w/2, self.y + self.hit_h/2, 1)
+    end
+
     -- collisions
     if self.state == 1 then
         for o in all(objects) do
             if o.base == worm and self:overlaps(o) then
                 o.destroyed = true
-                self.speed_y += 1
-                -- TODO part
+                self.speed_y += sgn(self.speed_y)
+                spawn_particles(4 + rnd(3), 3, o.x, o.y, 8)
             end
         end
     end
 
+end
+
+function ply_input(self)
+    local input_x = 0
+    local input_y = 0
+    if btn(0) then input_x -= 1 end
+    if btn(1) then input_x += 1 end
+    if btn(2) then input_y -= 1 end
+    if btn(3) then input_y += 1 end
+    return input_x, input_y
+end
+
+function cpu_input(self)
+    local input_x = 0
+    local input_y = 0
+    input_y = 1
+    return input_x, input_y
 end
 
 function mole.draw(self)
@@ -96,7 +115,7 @@ end
 
 function mole.collide_x(self)
     if abs(self.speed_x) > 2 then
-        shake = 1
+        if self.is_player then shake = 1 end
         self.speed_x = - self.speed_x/2
         self:hit(5)
     else
@@ -107,8 +126,10 @@ end
 
 function mole.collide_y(self)
     if abs(self.speed_y) > 2 then
-        freeze_time = 5
-        shake = 5
+        if self.is_player then
+            freeze_time = 5
+            shake = 5
+        end
         self.speed_y = - self.speed_y/2
         self:hit(10)
     else
