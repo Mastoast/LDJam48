@@ -1,11 +1,12 @@
 function _init()
-    init_menu()
+    --init_menu()
+    init_race()
 end
 
 -- TODO end race + result screen
 -- sfx(2, 0, 16, 8)
 
--- TODO start countdown
+-- TODO start countdown + anim flags
 -- sfx(2, 0, 4, 1)
 -- sfx(2, 0, 6, 1)
 
@@ -26,6 +27,7 @@ end
 -- racing music
 -- result music
 
+-- TODO mole IA
 
 
 function init_menu()
@@ -42,59 +44,6 @@ function init_menu()
     gcamera = {x = 0, y = -8*5, facing = 3, speed_y = 2}
     objects = {}
     particles = {}
-end
-
-function update_race()
-
-    for o in all(objects) do
-        o:update()
-        if o.destroyed then del(objects, o) end
-    end
-
-    for a in all(particles) do
-        a:update()
-    end
-
-    -- TODO better camera
-    local dest = (current_player.y - 64 + current_player.hit_h) + (current_player.facing == 3 and 48 or -48)
-    local diff = dest - gcamera.y
-    if abs(diff) > gcamera.speed_y then
-        gcamera.speed_y += sgn(diff)
-        gcamera.y = gcamera.y + gcamera.speed_y
-    else
-        gcamera.y = dest
-    end
-    -- clamp
-    gcamera.y = max(current_player.y - 88, min(current_player.y - 24, gcamera.y))
-end
-
-function draw_race()
-    cls((gcamera.y > 80 and 4) or 12)
-    
-    -- camera
-    if shake > 0 then
-        camera(gcamera.x - 2 + rnd(5), gcamera.y - 2 + rnd(5))
-    else
-        camera(gcamera.x, gcamera.y)
-    end
-
-    -- print every visible pattern
-    if patterns and #patterns > 0 then
-        for i=1,#patterns do
-            if gcamera.y > 128 * (i - 2) and gcamera.y < 128 * (i) then
-                local pattern_x, pattern_y = get_pattern(patterns[i])
-                map(pattern_x, pattern_y, 0, 8 * 16 * (i - 1), 16,16)
-            end
-        end
-    end
-
-    for o in all(objects) do
-        o:draw()
-    end
-
-    for a in all(particles) do
-		a:draw()
-	end
 end
 
 function update_menu()

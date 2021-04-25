@@ -73,7 +73,7 @@ function mole.update(self)
                 o.destroyed = true
                 self.speed_y += sgn(self.speed_y)
                 spawn_particles(4 + rnd(3), 3, o.x, o.y, 8)
-                sfx(2, 0, 0, 1)
+                self:psfx(2, 0, 0, 1)
             end
         end
     end
@@ -90,6 +90,13 @@ function mole.update(self)
         end
     else
         if self == current_player then sfx(-1, 0) end
+    end
+
+    -- check finish_line
+    if patterns and self.y > 128 * (#patterns - 1) + finish_line then
+        self.state = 3
+        self.flip_y = false
+        if self == current_player then race_finished = true end
     end
 end
 
@@ -155,7 +162,7 @@ function mole.collide_x(self)
         if self.is_player then shake = 1 end
         self.speed_x = - self.speed_x/2
         self.speed_y = self.speed_y * 0.8
-        sfx(2, 0, 2, 1)
+        self:psfx(2, 0, 2, 1)
     else
         self.speed_x = 0
     end
@@ -168,7 +175,7 @@ function mole.collide_y(self)
             shake = 5
         end
         self.speed_y = - self.speed_y/2
-        sfx(2, 0, 2, 1)
+        self:psfx(2, 0, 2, 1)
     else
         self.speed_y = 0
     end
@@ -177,4 +184,11 @@ end
 function mole.hit(self, recovery)
     self.recovery = recovery
     self.state = 2
+end
+
+function mole.psfx(self, n, channel, offset, length)
+    -- play if visible on screen
+    if self.y > gcamera.y and self.y < gcamera.y + 128 then
+        sfx(n, channel, offset, length)
+    end
 end
