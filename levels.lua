@@ -1,6 +1,8 @@
 function init_race()
+    gamestate = 1
     gtime = 0
     shake = 0
+    freeze_time = 0
     gcamera = {x = 0, y = 0, facing = 3, speed_y = 2}
     --
     current_player = create(mole, 40, 72)
