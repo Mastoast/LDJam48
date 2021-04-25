@@ -91,6 +91,8 @@ function object.check_solid(self, ox, oy)
     ox = ox or 0
     oy = oy or 0
 
+    if not patterns then return false end
+
     local pattern_nb = flr(self.y /128) + 1
     if pattern_nb >= 1 and pattern_nb <= #patterns then
         local pattern_x, pattern_y = get_pattern(patterns[pattern_nb])

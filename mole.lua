@@ -103,6 +103,21 @@ function cpu_input(self)
     return input_x, input_y
 end
 
+-- TODO fix movment
+-- TODO fix gravity
+function menu_input(self)
+    local input_x = 0
+    if self.x > 178 then
+        input_x = -1
+    elseif self.x < -50 then
+        input_x = 1
+    else
+        input_x = sgn(self.speed_x)
+    end
+    printable = input_x
+    return input_x, 0
+end
+
 function mole.draw(self)
     if self.state == 1 then
         if abs(self.speed_y) >= abs(self.speed_x) then

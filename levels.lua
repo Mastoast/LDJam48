@@ -4,6 +4,8 @@ function init_race()
     shake = 0
     freeze_time = 0
     gcamera = {x = 0, y = 0, facing = 3, speed_y = 2}
+    objects = {}
+    particles = {}
     --
     current_player = create(mole, 40, 72)
     current_player.get_input = ply_input

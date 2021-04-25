@@ -13,6 +13,8 @@ function init_menu()
     freeze_time = 30
     title_color = 1
     gcamera = {x = 0, y = -8*5, facing = 3, speed_y = 2}
+    objects = {}
+    particles = {}
 end
 
 function update_race()
@@ -69,19 +71,36 @@ function draw_race()
 end
 
 function update_menu()
-
     if freeze_time > 0 then return end
 
     if gtime%6 == 0 then title_color = 7 + rnd(8) end
 
     if gcamera.y < 53 then
-        gcamera.y += (56 - gcamera.y)/8 * 0.2
+        --gcamera.y += (56 - gcamera.y)/8 * 0.2
+        gcamera.y += 4
         return
     end
+
+    for o in all(objects) do
+        o:update()
+    end
+
+    for a in all(particles) do
+		a:update()
+	end
+
     if btnp(4) or btnp(5) then
         init_race()
     end
 
+    -- Spawn moles
+    if #objects == 0 then
+        for i in all({{-10, 128},{-10, 148},{138, 168},{138, 188}}) do
+            local m = create(mole, i[1], i[2])
+            m.get_input = menu_input
+            m.speed_x = - sgn(i[1]) * 10
+        end
+    end
 
 end
 
@@ -91,6 +110,15 @@ function draw_menu()
     camera(gcamera.x, gcamera.y)
 
     map(0, 0, 0, 0, 16, 32)
+
+    for o in all(objects) do
+        o:draw()
+    end
+
+    for a in all(particles) do
+		a:draw()
+	end
+
     rectfill(18, 116, 110, 128, 5)
     rectfill(20, 118, 108, 126, 6)
     print_centered("super mole racing", 0, 120, 0)

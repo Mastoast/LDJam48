@@ -75,7 +75,6 @@ end
 
 function update_trail(a)
     a.c = trail_colors[flr((a.t/a.t_max) * #trail_colors) + 1]
-    printable = a.c
     a.t+=1
 	if (a.t==a.t_max) del(particles, a)
 end
