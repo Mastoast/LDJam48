@@ -15,6 +15,7 @@ object.hit_h = 8
 object.facing = 1
 object.solid = true
 object.freeze = 0
+object.attack = false
 
 function object.init(self) end
 function object.update(self) end

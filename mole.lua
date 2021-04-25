@@ -9,23 +9,28 @@ mole.accel_x = 0.2
 mole.decel_x = 0.9
 mole.recovery = 0
 mole.is_player = false
-
--- TODO dash with X / O
--- sfx(2, 0, 8, 1)
+mole.dash_force = 4
+mole.dash_cd = 15
+mole.last_dash = 0
 
 function mole.init(self)
     self.get_input = cpu_input
     self.speed_y = -10
-    self.state = 2
+    self.state = 3
     self.recovery = 30
 end
 
 -- States
 -- 1 : digging
 -- 2 : stuned
--- 3 : waiting
+-- 3 : starting
+-- 4 : waiting
 
 function mole.update(self)
+
+    if self.state == 3 then return end
+
+    self.attack = gtime > self.last_dash + self.dash_cd/2
 
     -- timers
     if self.recovery > 0 then
@@ -44,6 +49,11 @@ function mole.update(self)
     if input_x == 0 then
         self.speed_x *= 0.9
         if abs(self.speed_x) < 1 then self.speed_x = 0 end
+    elseif abs(input_x) > 1 and gtime > (self.last_dash + self.dash_cd) then
+        -- dash
+        self.speed_x = self.dash_force * sgn(input_x)
+        self:psfx(2, 0, 8, 1)
+        self.last_dash = gtime
     else
         self.speed_x += input_x * self.accel_x
     end
@@ -61,7 +71,7 @@ function mole.update(self)
         end
         self.facing = self.speed_y > 0 and 3 or 2
     end
-    
+
     -- move
     self:move_x(self.speed_x, self.collide_x)
     self:move_y(self.speed_y, self.collide_y)
@@ -92,11 +102,15 @@ function mole.update(self)
         if self == current_player then sfx(-1, 0) end
     end
 
+    if self.state == 4 then return end
+
     -- check finish_line
     if patterns and self.y > 128 * (#patterns - 1) + finish_line then
-        self.state = 3
+        self.state = 4
         self.flip_y = false
-        if self == current_player then race_finished = true end
+        if self == current_player then
+            end_race()
+        end
     end
 end
 
@@ -107,6 +121,12 @@ function ply_input(self)
     if btn(1) then input_x += 1 end
     if btn(2) then input_y -= 1 end
     if btn(3) then input_y += 1 end
+    -- dash
+    if btnp(5) then
+        input_x = 2
+    elseif btnp(4) then
+        input_x = - 2
+    end
     return input_x, input_y
 end
 
@@ -114,6 +134,20 @@ function cpu_input(self)
     local input_x = 0
     local input_y = 0
     input_y = 1
+    -- dash to attack
+    for o in all(objects) do
+        if o.base == mole and o != self then
+            if abs(o.y - self.y) < 15 then
+                input_x = 2 * sgn(o.y - self.y)
+                return input_x, input_y
+            end
+        end
+    end
+    -- dash
+    if self.speed_y < 1 then
+        input_x = rnd({-2,2})
+    end
+    --
     return input_x, input_y
 end
 

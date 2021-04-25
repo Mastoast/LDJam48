@@ -7,8 +7,9 @@ function init_race()
     objects = {}
     particles = {}
     ground_limit = 80
-    finish_line = 64
+    finish_line = 56
     race_finished = false
+    race_start = 0
     --
     current_player = create(mole, 40, 72)
     current_player.get_input = ply_input
@@ -16,8 +17,7 @@ function init_race()
     create(mole, 64, 72)
     create(mole, 88, 72)
     create(mole, 112, 72)
-    race_length = 4
-    patterns = {0, 5, 5, 5, 1}
+    patterns = {0, 6, 6, 7, 1}
     -- spawn a worm every pattern
     for i=1,#patterns - 1 do
         create(worm, flr(rnd(120)), i * 128 + flr(rnd(120)))
@@ -25,6 +25,14 @@ function init_race()
 end
 
 function update_race()
+
+    -- cinematic
+    if gtime == 1 then
+        race_start = gtime
+        for o in all(objects) do
+            if o.base == mole then o.state = 1 end
+        end
+    end
 
     for o in all(objects) do
         o:update()
@@ -87,6 +95,26 @@ function draw_race()
     for a in all(particles) do
 		a:draw()
 	end
+
+    if race_finished then
+        print_centered("position : "..gposition.."/4", 0, gcamera.y + 16, 0)
+        print_centered("position : "..gposition.."/4", 1, gcamera.y + 16 + 1, 7)
+        print_centered("time : "..tostr(race_time).." seconds", 0, gcamera.y + 32, 0)
+        print_centered("time : "..tostr(race_time).." seconds", 1, gcamera.y + 32 + 1, 7)
+    end
+end
+
+function end_race()
+    race_finished = true
+    gposition = 1
+    race_time = (gtime - race_start)/30
+    sfx(-1, 0)
+    sfx(2, 2, 16, 8)
+    for o in all(objects) do
+        if o.base == mole and o != current_player and o.state >= 3 then
+            gposition += 1
+        end
+    end
 end
 
 

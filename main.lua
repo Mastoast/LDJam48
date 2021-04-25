@@ -1,14 +1,24 @@
 function _init()
-    --init_menu()
+    -- init_menu()
     init_race()
 end
 
--- TODO end race + result screen
--- sfx(2, 0, 16, 8)
-
 -- TODO start countdown + anim flags
+
+-- TODO level generation
+
+-- TODO minigame for start speed ++
 -- sfx(2, 0, 4, 1)
 -- sfx(2, 0, 6, 1)
+
+-- TODO musics
+-- menu music
+-- racing music
+-- result music
+
+-- TODO highscores
+
+-- TODO better mole IA
 
 -- SFXs
 -- menu selection 0/0-1
@@ -21,13 +31,6 @@ end
 -- hitting 2/2-1
 -- countdow 2/4-1 + 2/6-1
 -- endline 2/16-8
-
--- TODO musics
--- menu music
--- racing music
--- result music
-
--- TODO mole IA
 
 
 function init_menu()
@@ -66,6 +69,7 @@ function update_menu()
 	end
 
     -- TODO menu selections (length / difficulties)
+    -- menu difficulties / options
     if btnp(2) or btnp(3) then
         sfx(0, 0, 0, 1)
     end
