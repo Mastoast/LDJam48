@@ -2,6 +2,32 @@ function _init()
     init_menu()
 end
 
+-- TODO end race + result screen
+-- sfx(2, 0, 16, 8)
+
+-- TODO start countdown
+-- sfx(2, 0, 4, 1)
+-- sfx(2, 0, 6, 1)
+
+-- SFXs
+-- menu selection 0/0-1
+-- menu action 0/5-2
+-- menu validation 0/0-6
+
+-- digging 1/0-32
+-- getting bonus 2/0-1
+-- dashing 2/8-1
+-- hitting 2/2-1
+-- countdow 2/4-1 + 2/6-1
+-- endline 2/16-8
+
+-- TODO musics
+-- menu music
+-- racing music
+-- result music
+
+
+
 function init_menu()
     --
     gamestate = 0
@@ -90,7 +116,17 @@ function update_menu()
 		a:update()
 	end
 
+    -- TODO menu selections (length / difficulties)
+    if btnp(2) or btnp(3) then
+        sfx(0, 0, 0, 1)
+    end
+
+    if btnp(0) or btnp(1) then
+        sfx(0, 0, 5, 2)
+    end
+
     if btnp(4) or btnp(5) then
+        sfx(0, 0, 0, 6)
         init_race()
     end
 

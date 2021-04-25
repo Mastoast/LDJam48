@@ -10,8 +10,9 @@ mole.decel_x = 0.9
 mole.recovery = 0
 mole.is_player = false
 
--- TODO add particules on win / death / movement
--- TODO SFXs
+-- TODO dash with X / O
+-- sfx(2, 0, 8, 1)
+
 function mole.init(self)
     self.get_input = cpu_input
     self.speed_y = -10
@@ -65,11 +66,6 @@ function mole.update(self)
     self:move_x(self.speed_x, self.collide_x)
     self:move_y(self.speed_y, self.collide_y)
 
-
-    -- trail
-    if (abs(self.speed_y) > 1 or abs(self.speed_x) > 1) and self.y > ground_limit then
-        spawn_trail(self.x + self.hit_w/2, self.y + self.hit_h/2)
-    end
     -- collisions
     if self.state == 1 then
         for o in all(objects) do
@@ -77,6 +73,7 @@ function mole.update(self)
                 o.destroyed = true
                 self.speed_y += sgn(self.speed_y)
                 spawn_particles(4 + rnd(3), 3, o.x, o.y, 8)
+                sfx(2, 0, 0, 1)
             end
         end
     end
@@ -84,6 +81,16 @@ function mole.update(self)
     -- prevent cliping
     if self:check_solid(sgn(self.speed_x), 0) then self.speed_x = 0 end
     if self:check_solid(0, sgn(self.speed_y)) then self.speed_y = 0 end
+
+    -- trail
+    if (abs(self.speed_y) > 1 or abs(self.speed_x) > 1) and self.y > ground_limit then
+        spawn_trail(self.x + self.hit_w/2, self.y + self.hit_h/2)
+        if self == current_player and stat(16) == -1 then
+            sfx(1, 0, 0, 32)
+        end
+    else
+        if self == current_player then sfx(-1, 0) end
+    end
 end
 
 function ply_input(self)
@@ -147,11 +154,11 @@ function mole.collide_x(self)
     if abs(self.speed_x) > 2 then
         if self.is_player then shake = 1 end
         self.speed_x = - self.speed_x/2
-        self:hit(5)
+        self.speed_y = self.speed_y * 0.8
+        sfx(2, 0, 2, 1)
     else
         self.speed_x = 0
     end
-    -- sfx
 end
 
 function mole.collide_y(self)
@@ -161,11 +168,10 @@ function mole.collide_y(self)
             shake = 5
         end
         self.speed_y = - self.speed_y/2
-        self:hit(10)
+        sfx(2, 0, 2, 1)
     else
         self.speed_y = 0
     end
-    -- sfx
 end
 
 function mole.hit(self, recovery)
