@@ -111,6 +111,10 @@ function object.check_solid(self, ox, oy)
     if not self.ghost then
         for o in all(objects) do
             if o != self and not o.destroyed and o.solid and self:overlaps(o, ox, oy) then
+                -- attacks
+                if self.attack and o.get_attacked then
+                    o:get_attacked()
+                end
                 return true
             end
         end

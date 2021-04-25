@@ -2,6 +2,7 @@ function init_race()
     gamestate = 1
     gtime = 0
     shake = 0
+    printable = 0
     freeze_time = 0
     gcamera = {x = 0, y = 0, facing = 3, speed_y = 2}
     objects = {}
@@ -17,7 +18,7 @@ function init_race()
     create(mole, 64, 72)
     create(mole, 88, 72)
     create(mole, 112, 72)
-    patterns = {0, 6, 6, 7, 1}
+    patterns = {0, 6, 6, 6, 6, 6, 6, 6, 6, 7, 1}
     -- spawn a worm every pattern
     for i=1,#patterns - 1 do
         create(worm, flr(rnd(120)), i * 128 + flr(rnd(120)))
@@ -50,7 +51,6 @@ function update_race()
     else
         dest = (current_player.y - 64 + current_player.hit_h) + (current_player.facing == 3 and 48 or -48)
     end
-    printable = race_finished
 
     local diff = dest - gcamera.y
     if abs(diff) > gcamera.speed_y then

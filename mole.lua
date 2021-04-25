@@ -220,6 +220,10 @@ function mole.hit(self, recovery)
     self.state = 2
 end
 
+function mole.get_attacked(self)
+    self.speed_y *= self.decel_y
+end
+
 function mole.psfx(self, n, channel, offset, length)
     -- play if visible on screen
     if self.y > gcamera.y and self.y < gcamera.y + 128 then
