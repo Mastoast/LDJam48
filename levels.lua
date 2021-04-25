@@ -117,14 +117,7 @@ function draw_race()
         end
     end
 
-    for o in all(objects) do
-        o:draw()
-    end
-
-    for a in all(particles) do
-		a:draw()
-	end
-
+    -- lights
     if gcamera.y < 30 then
         local margin = 40
         for i=1,3 do
@@ -132,6 +125,14 @@ function draw_race()
             circfill(30 + i * 20, 20, 5, lights[#lights + 1 - i])
         end
     end
+
+    for o in all(objects) do
+        o:draw()
+    end
+
+    for a in all(particles) do
+		a:draw()
+	end
 
     if race_finished then
         print_centered("position : "..gposition.."/4", 0, gcamera.y + 16, 0)

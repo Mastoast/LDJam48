@@ -1,7 +1,7 @@
 function _init()
     race_length = 25
-    --init_menu()
-    init_race()
+    init_menu()
+    -- init_race()
 end
 
 -- TODO musics
@@ -168,7 +168,7 @@ function _draw()
     elseif gamestate == 1 then
         draw_race()
     end
-    print(printable, gcamera.x + 80, gcamera.y + 120, 6)
+    --print(printable, gcamera.x + 80, gcamera.y + 120, 6)
 end
 
 -- linear interpolation
