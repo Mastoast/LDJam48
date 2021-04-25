@@ -6,6 +6,7 @@ function init_race()
     gcamera = {x = 0, y = 0, facing = 3, speed_y = 2}
     objects = {}
     particles = {}
+    ground_limit = 80
     --
     current_player = create(mole, 40, 72)
     current_player.get_input = ply_input

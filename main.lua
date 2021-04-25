@@ -12,6 +12,7 @@ function init_menu()
     printable = 0
     freeze_time = 30
     title_color = 1
+    ground_limit = 80
     gcamera = {x = 0, y = -8*5, facing = 3, speed_y = 2}
     objects = {}
     particles = {}
@@ -95,10 +96,12 @@ function update_menu()
 
     -- Spawn moles
     if #objects == 0 then
-        for i in all({{-10, 128},{-10, 148},{138, 168},{138, 188}}) do
+        for i in all({{-50, 108},{-10, 128},{220, 148},{138, 168}}) do
             local m = create(mole, i[1], i[2])
             m.get_input = menu_input
-            m.speed_x = - sgn(i[1]) * 10
+            m.speed_x = - sgn(i[1]) * 3
+            m.speed_y = 0
+            m.state = 1
         end
     end
 

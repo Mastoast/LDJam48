@@ -48,7 +48,7 @@ function mole.update(self)
     end
 
     -- gravity
-    if self.y < 80 - self.hit_h then input_y = 1 end
+    if self.y < ground_limit - self.hit_h then input_y = 1 end
     if input_y == 0 then
         self.speed_y *= 0.9
         if abs(self.speed_y) < 1 then self.speed_y = 0 end
@@ -67,7 +67,7 @@ function mole.update(self)
 
 
     -- trail
-    if (abs(self.speed_y) > 1 or abs(self.speed_x) > 1) and self.y > 80 then
+    if (abs(self.speed_y) > 1 or abs(self.speed_x) > 1) and self.y > ground_limit then
         spawn_trail(self.x + self.hit_w/2, self.y + self.hit_h/2)
     end
     -- collisions
@@ -103,19 +103,25 @@ function cpu_input(self)
     return input_x, input_y
 end
 
--- TODO fix movment
--- TODO fix gravity
 function menu_input(self)
     local input_x = 0
-    if self.x > 178 then
+    if self.x > 108 then
         input_x = -1
-    elseif self.x < -50 then
+    elseif self.x < 20 then
         input_x = 1
-    else
+    elseif abs(self.speed_x) < 3 then
         input_x = sgn(self.speed_x)
     end
-    printable = input_x
-    return input_x, 0
+    --
+    if (self.y < ground_limit + 20) then
+        input_y = 1
+    elseif self.y > 180 then
+        input_y = -1
+    elseif abs(self.speed_y) < 3 then
+        input_y = sgn(self.speed_y)
+    end
+    return input_x, input_y
+    
 end
 
 function mole.draw(self)
