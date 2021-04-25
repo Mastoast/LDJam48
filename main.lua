@@ -1,15 +1,10 @@
 function _init()
-    -- init_menu()
-    init_race()
+    race_length = 30
+    init_menu()
+    -- init_race()
 end
 
--- TODO start countdown + anim flags
-
--- TODO level generation
-
 -- TODO minigame for start speed ++
--- sfx(2, 0, 4, 1)
--- sfx(2, 0, 6, 1)
 
 -- TODO musics
 -- menu music
@@ -18,7 +13,9 @@ end
 
 -- TODO highscores
 
--- TODO better mole IA
+-- TODO anim flags
+
+-- TODO better mole IA find exit
 
 -- SFXs
 -- menu selection 0/0-1
@@ -46,6 +43,9 @@ function init_menu()
     gcamera = {x = 0, y = -8*5, facing = 3, speed_y = 2}
     objects = {}
     particles = {}
+    --
+    menu_select = 0
+    -- 0 = depth, 1 = tuto, 2 = instructions
 end
 
 function update_menu()
@@ -67,14 +67,29 @@ function update_menu()
 		a:update()
 	end
 
-    -- TODO menu selections (length / difficulties)
-    -- menu difficulties / options
-    if btnp(2) or btnp(3) then
+    -- menu options
+    if btnp(2) then
         sfx(0, 0, 0, 1)
+        menu_select = (menu_select + 1) % 2
+    elseif btnp(3) then
+        sfx(0, 0, 0, 1)
+        menu_select = (menu_select - 1) % 2
     end
 
-    if btnp(0) or btnp(1) then
-        sfx(0, 0, 5, 2)
+    if menu_select == 0 then
+        if btnp(0) then
+            sfx(0, 0, 5, 2)
+            race_length = max(race_length - 1, 1)
+        elseif btnp(1) then
+            sfx(0, 0, 5, 2)
+            race_length = min(race_length + 1, 50)
+        end
+    elseif menu_select == 1 then
+        if btnp(1) then
+            menu_select = 2
+        end
+    elseif menu_select == 2 then
+        if btnp(0) then menu_select = 1 end
     end
 
     if btnp(4) or btnp(5) then
@@ -92,7 +107,6 @@ function update_menu()
             m.state = 1
         end
     end
-
 end
 
 function draw_menu()
@@ -114,11 +128,30 @@ function draw_menu()
     rectfill(20, 118, 108, 126, 6)
     print_centered("super mole racing", 0, 120, 0)
     print_centered("super mole racing", 1, 121, title_color)
-    --
     if gcamera.y >= 53 then
-        print_centered(" press 🅾️ or ❎ to start ", 1, 155, 1)
-        print_centered(" press 🅾️ or ❎ to start ", 0, 156, 7)
+        --⬆️⬇️➡️⬅️
+        local depth_text = "race depth : "..tostr(race_length)
+        if menu_select == 0 then depth_text = "⬅️ "..depth_text.." ➡️" end
+        print_centered(depth_text, 1, 135, 1)
+        print_centered(depth_text, 0, 136, 7)
+        --
+        local tuto_text = "how to play"
+        if menu_select == 1 then tuto_text = tuto_text.." ➡️" end
+        print_centered(tuto_text, 1, 145, 1)
+        print_centered(tuto_text, 0, 146, 7)
     end
+
+    if menu_select == 2 then
+        rectfill(18, 90, 110, 160, 5)
+        rectfill(20, 92, 108, 158, 6)
+        print_centered("move with ⬆️⬇️➡️⬅️  ", 0, 100, 0)
+        print_centered(" dash with 🅾️ and ❎ ", 0, 110, 0)
+        print("⬅️ return", 22, 150, 0)
+    end
+
+    --
+    print_centered(" press 🅾️ or ❎ to start ", 1, 165, 1)
+    print_centered(" press 🅾️ or ❎ to start ", 0, 166, 7)
 
 end
 
@@ -152,4 +185,9 @@ end
 -- print at center
 function print_centered(str, offset_x, y, col)
     print(str, 64 - (#str * 2) + offset_x, y, col)
+end
+
+-- random range
+function rrnd(min, max)
+    return flr(min + rnd(max - min))
 end

@@ -138,7 +138,7 @@ function cpu_input(self)
     for o in all(objects) do
         if o.base == mole and o != self then
             if abs(o.y - self.y) < 15 then
-                input_x = 2 * sgn(o.y - self.y)
+                input_x = 2 * sgn(o.x - self.x)
                 return input_x, input_y
             end
         end

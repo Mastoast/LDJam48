@@ -19,7 +19,11 @@ function init_race()
     create(mole, 64, 72)
     create(mole, 88, 72)
     create(mole, 112, 72)
-    patterns = {0, 6, 6, 6, 6, 6, 6, 6, 6, 7, 1}
+    patterns = {0}
+    for i=1,race_length do
+        add(patterns, rrnd(2, 12))
+    end
+    add(patterns, 1)
     -- spawn a worm every pattern
     for i=1,#patterns - 1 do
         create(worm, flr(rnd(120)), i * 128 + flr(rnd(120)))
@@ -74,7 +78,6 @@ function update_race()
         gcamera.y = dest
     end
     -- clamp
-    printable = gcamera.y
     if race_finished then
         gcamera.y = min(gcamera.y, (#patterns - 1) * 128)
     elseif race_start <= 0 then
