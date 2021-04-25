@@ -1,5 +1,5 @@
 function _init()
-    race_length = 15
+    race_length = 25
     init_menu()
     --init_race()
 end
@@ -8,8 +8,6 @@ end
 -- menu music
 -- racing music
 -- result music
-
--- TODO anim flags
 
 -- SFXs
 -- menu selection 0/0-1
