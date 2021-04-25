@@ -1,21 +1,15 @@
 function _init()
-    race_length = 30
+    race_length = 15
     init_menu()
-    -- init_race()
+    --init_race()
 end
-
--- TODO minigame for start speed ++
 
 -- TODO musics
 -- menu music
 -- racing music
 -- result music
 
--- TODO highscores
-
 -- TODO anim flags
-
--- TODO better mole IA find exit
 
 -- SFXs
 -- menu selection 0/0-1
@@ -54,8 +48,8 @@ function update_menu()
     if gtime%6 == 0 then title_color = 7 + rnd(8) end
 
     if gcamera.y < 53 then
-        --gcamera.y += (56 - gcamera.y)/8 * 0.2
-        gcamera.y += 4
+        gcamera.y += (56 - gcamera.y)/8 * 0.2
+        --gcamera.y += 4
         return
     end
 

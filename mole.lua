@@ -134,18 +134,20 @@ function cpu_input(self)
     local input_x = 0
     local input_y = 0
     input_y = 1
-    -- dash to attack
-    for o in all(objects) do
-        if o.base == mole and o != self then
-            if abs(o.y - self.y) < 15 then
-                input_x = 2 * sgn(o.x - self.x)
-                return input_x, input_y
-            end
-        end
-    end
+
     -- dash
     if self.speed_y < 1 then
         input_x = rnd({-2,2})
+    else
+        -- dash to attack
+        for o in all(objects) do
+            if o.base == mole and o != self then
+                if abs(o.y - self.y) <= 8 then
+                    input_x = 2 * sgn(o.x - self.x)
+                    return input_x, input_y
+                end
+            end
+        end
     end
     --
     return input_x, input_y

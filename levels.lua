@@ -10,7 +10,7 @@ function init_race()
     ground_limit = 80
     finish_line = 56
     race_finished = false
-    race_start = - 160
+    race_start = - 120
     lights = {0, 0, 0}
     --
     current_player = create(mole, 40, 72)
@@ -24,6 +24,7 @@ function init_race()
         add(patterns, rrnd(2, 12))
     end
     add(patterns, 1)
+    -- patterns = {0, 12, 1}
     -- spawn a worm every pattern
     for i=1,#patterns - 1 do
         create(worm, flr(rnd(120)), i * 128 + flr(rnd(120)))
@@ -85,6 +86,12 @@ function update_race()
     else
         gcamera.y = max(current_player.y - 88, min(current_player.y - 24, gcamera.y, (#patterns - 1) * 128))
     end
+
+    if race_finished then
+        if btnp(4) or btnp(5) then
+            init_menu()
+        end
+    end
 end
 
 
@@ -129,6 +136,9 @@ function draw_race()
         print_centered("position : "..gposition.."/4", 1, gcamera.y + 16 + 1, 7)
         print_centered("time : "..tostr(race_time).." seconds", 0, gcamera.y + 32, 0)
         print_centered("time : "..tostr(race_time).." seconds", 1, gcamera.y + 32 + 1, 7)
+            --
+        print_centered(" press 🅾️ or ❎ to exit ", 0, gcamera.y + 96, 0)
+        print_centered(" press 🅾️ or ❎ to exit ", 1, gcamera.y + 96, 7)
     end
 end
 
