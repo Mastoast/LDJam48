@@ -1,13 +1,13 @@
 function _init()
     race_length = 25
-    init_menu()
-    --init_race()
+    --init_menu()
+    init_race()
 end
 
 -- TODO musics
--- menu music
--- racing music
--- result music
+-- menu music 00-05
+-- result music 06-06
+-- racing music 07-
 
 -- SFXs
 -- menu selection 0/0-1
@@ -38,6 +38,8 @@ function init_menu()
     --
     menu_select = 0
     -- 0 = depth, 1 = tuto, 2 = instructions
+    --
+    music(0)
 end
 
 function update_menu()

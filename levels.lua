@@ -29,6 +29,8 @@ function init_race()
     for i=1,#patterns - 1 do
         create(worm, flr(rnd(120)), i * 128 + flr(rnd(120)))
     end
+    --
+    music(7)
 end
 
 function update_race()
@@ -126,7 +128,7 @@ function draw_race()
     if gcamera.y < 30 then
         local margin = 40
         for i=1,3 do
-            circfill(30 + i * 20, 20, 6, 0)
+            circfill(30 + i * 20, 20, 7, 0)
             circfill(30 + i * 20, 20, 5, lights[#lights + 1 - i])
         end
     end
@@ -147,6 +149,7 @@ function end_race()
     gposition = 1
     race_time = (gtime - race_start)/30
     sfx(-1, 0)
+    music(6)
     for o in all(objects) do
         if o.base == mole and o != current_player and o.state >= 3 then
             gposition += 1

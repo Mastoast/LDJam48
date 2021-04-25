@@ -199,6 +199,7 @@ function mole.collide_x(self)
         self.speed_x = - self.speed_x/2
         self.speed_y = self.speed_y * 0.8
         self:psfx(2, 0, 2, 1)
+        spawn_particles(4 + rnd(3), 2, self.x, self.y, 1)
     else
         self.speed_x = 0
     end
@@ -212,6 +213,7 @@ function mole.collide_y(self)
         end
         self.speed_y = - self.speed_y/2
         self:psfx(2, 0, 2, 1)
+        spawn_particles(4 + rnd(3), 2, self.x, self.y, 1)
     else
         self.speed_y = 0
     end
