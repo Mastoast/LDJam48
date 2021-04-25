@@ -10,7 +10,8 @@ function init_race()
     ground_limit = 80
     finish_line = 56
     race_finished = false
-    race_start = 0
+    race_start = - 160
+    lights = {0, 0, 0}
     --
     current_player = create(mole, 40, 72)
     current_player.get_input = ply_input
@@ -27,11 +28,22 @@ end
 
 function update_race()
 
-    -- cinematic
-    if gtime == 1 then
-        race_start = gtime
-        for o in all(objects) do
-            if o.base == mole then o.state = 1 end
+    if race_start < 0 then
+        -- cinematic
+        race_start += 1
+        if race_start == 0 then
+            race_start = gtime
+            for o in all(objects) do
+                if o.base == mole then o.state = 1 end
+            end
+            sfx(2, 2, 6, 1)
+            lights = {11, 11, 11}
+        end
+        if race_start%30 == 0 then
+            if abs(race_start/30) <= #lights then
+                lights[abs(race_start/30)] = 8
+                sfx(2, 0, 4, 1)
+            end
         end
     end
 
@@ -48,6 +60,8 @@ function update_race()
     local dest = 0
     if race_finished then
         dest = (#patterns - 1) * 128
+    elseif race_start <= 0 then
+        dest = current_player.y - 88
     else
         dest = (current_player.y - 64 + current_player.hit_h) + (current_player.facing == 3 and 48 or -48)
     end
@@ -60,8 +74,11 @@ function update_race()
         gcamera.y = dest
     end
     -- clamp
+    printable = gcamera.y
     if race_finished then
         gcamera.y = min(gcamera.y, (#patterns - 1) * 128)
+    elseif race_start <= 0 then
+        gcamera.y = current_player.y - 88
     else
         gcamera.y = max(current_player.y - 88, min(current_player.y - 24, gcamera.y, (#patterns - 1) * 128))
     end
@@ -96,6 +113,14 @@ function draw_race()
 		a:draw()
 	end
 
+    if gcamera.y < 30 then
+        local margin = 40
+        for i=1,3 do
+            circfill(30 + i * 20, 20, 6, 0)
+            circfill(30 + i * 20, 20, 5, lights[#lights + 1 - i])
+        end
+    end
+
     if race_finished then
         print_centered("position : "..gposition.."/4", 0, gcamera.y + 16, 0)
         print_centered("position : "..gposition.."/4", 1, gcamera.y + 16 + 1, 7)
@@ -109,7 +134,6 @@ function end_race()
     gposition = 1
     race_time = (gtime - race_start)/30
     sfx(-1, 0)
-    sfx(2, 2, 16, 8)
     for o in all(objects) do
         if o.base == mole and o != current_player and o.state >= 3 then
             gposition += 1

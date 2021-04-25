@@ -30,7 +30,6 @@ end
 -- dashing 2/8-1
 -- hitting 2/2-1
 -- countdow 2/4-1 + 2/6-1
--- endline 2/16-8
 
 
 function init_menu()
