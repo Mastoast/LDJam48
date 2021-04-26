@@ -191,6 +191,19 @@ function mole.draw(self)
     spr(self.spr, self.x, self.y, 1, 1, self.flip_x, self.flip_y)
     pset(self.x + 2, self.y - 1 + (self.flip_y and 0 or 9), 3)
     pset(self.x + 5, self.y - 1 + (self.flip_y and 0 or 9), 3)
+
+    -- circle if proximity
+    if self.is_player then
+        local proximity = false
+        for o in all(objects) do
+            if o.base == mole and o != self then
+                if abs(o.y - self.y) <= 32 then
+                    circ(self.x + self.hit_w/2, self.y + self.hit_h/2, 8, 7)
+                    break
+                end
+            end
+        end
+    end
 end
 
 function mole.collide_x(self)
